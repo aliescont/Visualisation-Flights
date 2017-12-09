@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+
+  
+    <style>
+
+    circle {
+        fill: blue;
+        stroke: black;
+        stroke-width: 0.7;
+        opacity: 0.7;
+      }
+
+    h2 {
+        text-align: center;
+        color: black;
+      }
+    .tooltip{
+        font-family: simsun;
+        font-size: 14px;
+        width: 200;
+        height: auto;
+        position: absolute;
+        text-align: left;
+        border-style: solid;
+        border-width: 1px;
+        background-color: white;
+        border-radius: 5px;
+    }
+
+    .bar {
+      fill: steelblue;
+    }
+
+    .bar:hover {
+      fill: lightblue;
+    }
+
+    .axis text {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+.x.axis path {
+  display: none;
+}
+
+    </style>
+
+    <script type="text/javascript">  
+            function draw(geo_data) {
+        "use strict";
+        var margin = 75,
+            width = 1400 - margin,
+            height = 600 -margin;
+
+        var zoom = d3.behavior.zoom()
+          .scaleExtent([1, 5])
+          .on("zoom", zoomed);
+
+
+        var div = d3.select("body").append("div")   
+          .attr("class", "tooltip")               
+          .style("opacity", 0);
+
+
+        var svg = d3.select("body")
+            .append("svg")
+              .attr("width", width + margin)
+              .attr("height", height + margin)
+            .append('g')
+              .attr('class', 'map')
+              
+            .call(zoom);
+
+        var rect = svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all");
+
+
+        function zoomed() {
+          svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+        var tooltip = d3.select("body")
+          .append("div")
+          .style("position", "absolute")
+          .style("z-index", "10")
+          .style("visibility", "hidden")
+          .text("tooltip");
+      
+
+        var projection = d3.geo.albersUsa()
+
+        var path = d3.geo.path().projection(projection);
+
+        var map = svg.selectAll('path')
+                     .data(geo_data.features)
+                     .enter()
+                     .append('path')
+                     .attr('d', path)
+                     .style('fill', 'Gray')
+                     .style('stroke', 'black')
+                     .style('stroke-width', 0.5);   
+
+        var chart = d3.select(".chart")
+            .attr("width", 960)
+            .attr("height", 500)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");       
+
+
+        function plot_points(data) {
+            //draw circles logic
+            
+            function agg_airport(leaves) {
+                var total = d3.sum(leaves, function(d) {
+                    return d['delayed'];
+                debugger;
+                });
+
+                var coords = leaves.map(function(d) {
+                    return projection([+d.long, +d.lat]);
+                });
+
+                var center_x = d3.mean(coords, function(d) {
+                    return d[0];
+                });
+
+                var center_y = d3.mean(coords, function(d) {
+                    return d[1];
+                });
+
+
+                return {
+                  'delayed' : total,
+                  'x' : center_x,
+                  'y' : center_y
+                };
+
+
+            }
+            var nested = d3.nest()
+                           .key(function(d) {
+                              return d['airport'];
+                           })
+                           .rollup(agg_airport)
+                           .entries(data);
+            
+            var delayed_max = d3.max(nested, function(d) {
+                return d.values['delayed'];
+            });
+
+            var radius = d3.scale.sqrt()
+                           .domain([0, delayed_max])
+                           .range([0, 15]);
+            function key_func(d) {
+                return d['key'];
+            }
+
+
+            svg.append('g')
+               .attr("class", "bubble")
+               .selectAll("circle")
+               .data(nested.sort(function(a, b) { 
+                  return b.values['delayed'] - a.values['delayed'];
+               }), key_func)
+               .enter()
+               .append("circle")
+               .attr('cx', function (d) {return d.values['x'];})
+               .attr('cy', function (d) {return d.values['y'];})
+               .attr('r', function(d) {
+                    return radius(d.values['delayed']);
+               })
+               .attr('fill', 'Blue')
+               .attr('stroke', 'black')
+               .attr('opacity', 0.8)
+               .on("mouseover", function(d){
+                  
+                tooltip.text( d.key + " : " + Math.round(d.values['delayed']) + " min delayed");
+                tooltip.style("visibility", "visible");
+              })
+              
+              .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+
+
+        }
+
+        var format = d3.time.format("%Y-%m-%d");
+
+                
+        d3.tsv("data_airport.tsv", function(d) {
+          d['delayed'] = +d['delayed'];
+
+          return d;    
+
+
+      
+          var x = d3.scale.ordinal()
+              .domain(data.map(function(d) { return d['date']; }))
+              .rangeRoundBands([0, width], .1);
+
+          var y = d3.scale.linear()
+              .domain([0, d3.max(data, function(d) { return d['arrivals']; }) * 1.1])
+              .range([height, 0]);
+
+       
+          var xAxis = d3.svg.axis()
+              .scale(x)
+              .orient("bottom");
+
+          var yAxis = d3.svg.axis()
+              .scale(y)
+              .orient("left");
+
+          chart.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(xAxis);
+
+          chart.append("g")
+              .attr("class", "y axis")
+              .call(yAxis);
+
+          
+          var bar = chart.selectAll(".bar")
+              .data(data)
+            .enter().append("rect")
+              .attr("class", "bar")
+              .attr("x", function(d) { return x(d['date']); })
+              .attr("y", height)
+              .attr("width", x.rangeBand())
+              .attr("height", 0);
+
+          bar.transition()
+              .duration(1500)
+              .ease("elastic")
+              .attr("y", function(d) { return y(d['delayed']); })
+              .attr("height", function(d) { return height - y(d['delayed']); })
+
+
+        }, plot_points);
+      };
+      </script>
+  </head>
+<body>
+  <script type="text/javascript">
+
+    
+  /*
+    Use D3 to load the GeoJSON file
+    */
+    
+
+d3.json("us_new.json", draw);
+    
+   
+  </script>
+</body>
+</html>
