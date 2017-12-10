@@ -6,26 +6,42 @@
 
   
     <style>
-
     circle {
-        fill: blue;
+        fill: #487284;
         stroke: black;
         stroke-width: 0.7;
         opacity: 0.7;
       }
-
     h2 {
         text-align: center;
         color: black;
       }
+    h4 {
+        
+        color: gray;
+        align-content: justify;
+      }
     div.years_buttons {
         position: fixed;
-        top: 5px;
-        left: 50px;
+        color: var(--color-snow);
+        background: var(--color-ocean);
+        top: 150px;
+        left: 150px;
       }
+
+    div.years_buttons div {
+        display:inline-block;
+        background-color: #6e92a3;
+        padding: 3px;
+        margin: 7px;
+        position:relative;
+    
+      }
+
     div.tooltip {   
+        visibility: hidden;
         position: absolute;
-        width: 200px;
+        width: 100px;
         height: auto;
         padding: 10px;
         background-color: white;
@@ -37,38 +53,41 @@
         box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         pointer-events: none;
 }    
-
-
     </style>
 
     <script type="text/javascript">  
             function draw(geo_data) {
         "use strict";
-        var margin = 75,
-            width = 1400 - margin,
-            height = 600 -margin;
 
+        // Map size 
+        var margin = 100,
+            width = 1400 - margin,
+            height = 600 - margin;
+
+         d3.select("body")
+          .append("h2")
+          .text("Flights Delayed 2007-2017");
+
+        d3.select("body")
+          .append("h4")
+          .text("The dataset contains information on United State flight delays from RITA for the last 10 years. This map shows the distribution of major airports in US and the ammount of minutes delayed in each airport on selected year");
+
+
+
+
+        // Enabling zoom to identify better airports closer together
+        
         var zoom = d3.behavior.zoom()
           .scaleExtent([1, 10])
           .on("zoom", zoomed);
-
-
-        var div = d3.select("body").append("div")   
-          .attr("class", "tooltip")               
-          .style("opacity", 0);
-
-
+        
         var svg = d3.select("body")
             .append("svg")
               .attr("width", width + margin)
               .attr("height", height + margin)
             .append('g')
-              .attr('class', 'map')
-              
+              .attr('class', 'map')              
             .call(zoom);
-        
-        var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017];
-
 
         var rect = svg.append("rect")
             .attr("width", width)
@@ -79,17 +98,20 @@
 
         function zoomed() {
           svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
+        } 
+        
+        // var tooltip = d3.select("body")
+        //   .append("div")
+        //   .style("position", "absolute")
+        //   .style("z-index", "10")
+        //   .style("visibility", "hidden")
+        //   .text("tooltip");
 
-        var tooltip = d3.select("body")
-          .append("div")
-          .style("position", "absolute")
-          .style("z-index", "10")
-          .style("visibility", "hidden")
-          .text("tooltip");
-      
-
+        // Draw map
         var projection = d3.geo.albersUsa()
+                           .translate([width / 2.5, height /1.5]);
+                              
+                               
 
         var path = d3.geo.path().projection(projection);
 
@@ -98,95 +120,85 @@
                      .enter()
                      .append('path')
                      .attr('d', path)
-                     .style('fill', 'Gray')
+                     .style('fill', 'lightGray')
                      .style('stroke', 'black')
                      .style('stroke-width', 0.5);
+                     
 
-
+        // Variable for tooltip              
+        var div = d3.select("body").append("div")   
+          .attr("class", "tooltip")               
+          .style("opacity", 0.8);
+      
         function plot_points(data) {
             //draw circles logic
             
             function agg_airport(leaves) {
+              // function to aggregated data based on sum of delayed and coordinates
                 var total = d3.sum(leaves, function(d) {
-                    return d['delayed'];
-                
+                    return d.delayed;                
                 });
-
                 var coords = leaves.map(function(d) {
                     return projection([+d.long, +d.lat]);
-
                 });
-
-
                 var center_x = d3.mean(coords, function(d) {
                     return d[0];
                 });
-
                 var center_y = d3.mean(coords, function(d) {
                     return d[1];
                 });  
-
-
                 return {
                   
                   'delayed' : total,
                   'x' : center_x,
                   'y' : center_y
                 };
-
-
-
             }
-          
-                  
-            var date_nest = d3.nest()
-                              .key(function(d){
-                                return d['date'].getUTCFullYear();
-
-                              })
-                              
-                              .entries(data);
-                              
 
             var nested = d3.nest()
                            .key(function(d) {
-                            return date_nest['airport'];
-
+                            return d.airport+ d.date.getUTCFullYear();
                               })
-                           
+                           .rollup(agg_airport)
                            .entries(data);
-                           debugger;
-                           
-                              
-
-                           
-            
+                          
+           
+           // Calculate radius of each plot proportional to the number of flights delayed 
             var delayed_max = d3.max(nested, function(d) {
-                return d.values['delayed'];
+                return d.values.delayed;
             });
-
+     
             var radius = d3.scale.sqrt()
                            .domain([0, delayed_max])
-                           .range([0, 15]);
+                           .range([0, 22]);
             
             function key_func(d) {
-                return d['key'];
-
+                return d.key;
             }
-
+             
+        function update(year) {
+          // Logic to plot points based on button selected
+              var filtered = data.filter(function(d) {
+                  return d.date.getUTCFullYear() === year;
+              });
              
 
-        function update(year) {
-              var filtered = nested.filter(function(d) {
+              var nested = d3.nest()
+                           .key(function(d) {
+                            return d.airport;
+                              })
+                           .rollup(agg_airport)
+                           .entries(filtered);
 
-                  return new Date(d['date']).getUTCFullYear() === year;
+                           
+               d3.select('.bubble').remove();
 
-              });
-              
                svg.append('g')
                .attr("class", "bubble")
                .selectAll("circle")
-               .data(filtered, key_func)
+               .data(nested.sort(function(a, b) { 
+                  return b.values['delayed'] - a.values['delayed'];
+               }), key_func)
                .enter()
                .append("circle")
                .attr('cx', function (d) {return d.values['x'];})
@@ -199,19 +211,17 @@
                .attr('opacity', 0.8)
                .on("mouseover", function(d){
                   
-                tooltip.text( "Total delay :  " + Math.round(d.values['delayed']));
-                tooltip.style("visibility", "visible");
+                div.text( "Total delay :  " + Math.round(d.values['delayed']));
+                div.style("visibility", "visible");
               })
-              .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-              .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
-
+              .on("mousemove", function(){return div.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+              .on("mouseout", function(){return div.style("visibility", "hidden");});
               
-
-
-
-
-
           }
+
+        // buttons logic to select and update based on year selected
+
+        var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017];
 
         var buttons = d3.select("body")
                         .append("div")
@@ -230,39 +240,29 @@
                       .transition()
                       .duration(500)
                       .style("color", "black")
-                      .style("background", "rgb(251, 201, 127)");
-
+                      .style("background", "#6e92a3");
                     d3.select(this)
                       .transition()
                       .duration(500)
-                      .style("background", "lightBlue")
+                      .style("background", "#b8ced8")
                       .style("color", "white");
                     update(d);
                      });
-
         }
-
         var format = d3.time.format("%Y-%m-%d");
-
         d3.tsv("data_new.tsv", function(d) {
-          d['delayed'] = +d['delayed'];
-          d['date'] = format.parse(d['date']);
-          
-         
+          d.delayed = +d.delayed;
+          d.date = format.parse(d.date);
           return d;
         }, plot_points);
       };
       </script>
   </head>
 <body>
+
   <script type="text/javascript">
 
-    
-  /*
-    Use D3 to load the GeoJSON file
-    */
-    
-
+// Load geojson    
 d3.json("us_new.json", draw);
     
    
