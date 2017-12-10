@@ -1,19 +1,15 @@
 # Visualisation-Flights
 
-Using data got from RITA, that shows flight delays and performance from September 2016 to September 2017. I will analyse number of delayed flights by airport showing in a US map with points that shows location of airports with a bubble of a radio proportional to the sum of delayed flights.
+The dataset contains information on United States flight delays from RITA for the last 10 years, selecting major airports of US. The main object of this visualisation is to analyse which airports have more flight with delay in the last 10 years. 
 
-Project Steps
-Step Five - Get Feedback
-Share your visualization with at least 3 other people and document their feedback. There are many ways to get feedback, and more feedback is generally better! Here are some options.
+Design: The first step was cleaning data from data got from RITA and select variables of location and date, such as
+State, Airport, Long, Lat, Dat. And variables showing arrivals, delayed, cancelled,	diverted and the reason for delayed
+carrier_del	weather_del	nas_del	security_del	late_aircraft_del	on_time
 
-Share your visualization with others in person and have them think aloud as they read and explore the graphic so you can document what stands out to them and how they interpret the graphic.
-Share a link to your repository in the discussions and ask others to share constructive criticisms. Be sure to offer advice to others who are seeking feedback too!
-Create and share a Gist, which contains an index.html file, data file, and any .js or .css files). Directions for creating and sharing a Gist can be found at http://bl.ocks.org/.
+The first version of this visualisation includes a U.S map showing the distribution of major airports with bubble size proportional to the amount of delayed flights on each airport. One of the issues found on this version was that there are several airports located closer to each other. In order to solve this, I used zoom function to have a better look of these cases.
 
-Box Plots Gist EXAMPLE:
-https://gist.github.com/mbostock/4061502
-http://bl.ocks.org/mbostock/4061502
-You might need to ask specific questions to prompt the reader. Here are some questions to help you. You can, of course, ask others.
+Pending feedback review
+
 
 What do you notice in the visualization?
 What questions do you have about the data?
