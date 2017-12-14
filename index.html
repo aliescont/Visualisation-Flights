@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+
+  
+    <style>
+
+    .bar {
+        fill: steelblue;
+    }
+
+    .axis {
+        font: 10px sans-serif;
+  }
+
+    .axis text {
+        font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    
+    circle {
+        fill: #487284;
+        stroke: black;
+        stroke-width: 0.7;
+        opacity: 0.7;
+      }
+    h2 {
+        text-align: center;
+        color: black;
+      }
+    h4 {
+        
+        color: gray;
+        align-content: justify;
+      }
+    div.years_buttons {
+        position: fixed;
+        color: var(--color-snow);
+        background: var(--color-ocean);
+        top: 150px;
+        left: 850px;
+        right: 50px;
+        
+      }
+    div.years_buttons div {
+        display:inline-block;
+        background-color: #6e92a3;
+        padding: 3px;
+        margin: 5px;
+        position:relative;
+    
+      }
+
+    div.tooltip {   
+        visibility: hidden;
+        position: absolute;
+        width: 100px;
+        height: auto;
+        padding: 10px;
+        background-color: white;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        pointer-events: none;
+}    
+    </style>
+
+    <script type="text/javascript">  
+            function draw(geo_data) {
+        "use strict";
+
+        // Map size 
+        var margin = { top: 10, right: 50, bottom: 50, left: 50 };
+        var width = 800;
+        var height = 650 - margin.top - margin.bottom;
+
+        var width1 = 450 - margin.right - margin.left;
+        var height1 = 400 - margin.bottom - margin.top;
+
+        
+
+         d3.select("body")
+          .append("h2")
+          .text("Flights Delayed 2007-2017");
+
+        d3.select("body")
+          .append("h4")
+          .text("The dataset contains information on United State flight delays from RITA for the last 10 years. This map shows the distribution of major airports in US and the ammount of minutes delayed in each airport on selected year");
+
+  
+        
+        var zoom = d3.behavior.zoom()
+          .scaleExtent([1, 10])
+          .on("zoom", zoomed);
+
+        // SVG for map
+        
+        var svg = d3.select("body")
+            .append("svg")
+              .attr("width", width + margin.left)
+              .attr("height", height + margin.top + margin.bottom)
+            .append('g')
+              .attr('class', 'map')              
+            .call(zoom);
+
+        // SVG for chart   
+
+        var svg1 = d3.select("body")
+            .append("svg")
+              .attr("width", width1 + margin.left + margin.right)
+              .attr("height", height1 + margin.top + margin.bottom)
+            .append("g") 
+              .attr('class', 'chart'); 
+
+        var chart = d3.select(".chart")
+              .attr("width", width1)
+              .attr("height", height1 + margin.top + margin.bottom)
+            .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.bottom + ")");   
+
+        chart.append("text")      
+            .attr("x", width1 / 2 )
+              .attr("y",  height1  + margin.bottom)
+            .style("text-anchor", "center")
+            .text("Date");
+
+                       
+             
+        // Enabling zoom to identify better airports closer together
+        var rect = svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all");
+
+
+        function zoomed() {
+          svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        } 
+  
+
+        // Draw map
+        var projection = d3.geo.albersUsa()
+
+                           .translate([width / 2, height /2]);
+
+        var path = d3.geo.path().projection(projection);
+
+        var map = svg.selectAll('path')
+                     .data(geo_data.features)
+                     .enter()
+                     .append('path')
+                     .attr('d', path)
+                     .style('fill', 'lightGray')
+                     .style('stroke', 'black')
+                     .style('stroke-width', 0.5);
+             
+
+        // Variable for tooltip              
+        var div = d3.select("body").append("div")   
+          .attr("class", "tooltip")               
+          .style("opacity", 0.8);
+
+
+        function plot_points(data) {
+            //draw circles logic
+            
+            function agg_airport(leaves) {
+              // function to aggregated data based on sum of delayed and coordinates
+                var total = d3.sum(leaves, function(d) {
+                    return d.delayed;                
+                });
+                var coords = leaves.map(function(d) {
+                    return projection([+d.long, +d.lat]);
+                });
+                var center_x = d3.mean(coords, function(d) {
+                    return d[0];
+                });
+                var center_y = d3.mean(coords, function(d) {
+                    return d[1];
+                });  
+               
+                return {
+                  
+                  'delayed' : total,
+                  'x' : center_x,
+                  'y' : center_y
+                 
+                };
+            }
+
+            var nested = d3.nest()
+                           .key(function(d) {
+                            return d.airport+ d.date.getFullYear();
+                              })
+                           .rollup(agg_airport)
+                           .entries(data);
+                           debugger;
+                          
+           
+           // Calculate radius of each plot proportional to the number of flights delayed 
+            var delayed_max = d3.max(nested, function(d) {
+                return d.values.delayed;
+            });
+
+     
+            var radius = d3.scale.sqrt()
+                           .domain([0, delayed_max])
+                           .range([0, 22]);
+            
+            function key_func(d) {
+                return d.key;
+            }
+
+           // Scales
+            var x = d3.scale.ordinal()
+                .rangeRoundBands([0, width1], 0.1);
+            
+            var y = d3.scale.linear()
+                .domain([0, delayed_max])
+                .range([height1, 0]);
+            // Axis
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .tickFormat(d3.time.format("%Y-%m-%d"));
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(5);
+
+
+            chart.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height1 + ")")
+                .call(xAxis);
+
+            chart.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+             
+        function update(year) {
+          // Logic to plot points based on button selected
+              var filtered = data.filter(function(d) {
+                  return d.date.getFullYear() === year;
+              });
+              
+
+              var nested = d3.nest()
+                           .key(function(d) {
+                            return d.airport;
+                              })
+                           .rollup(agg_airport)
+                           .entries(filtered);
+                           
+
+                           
+               d3.select('.bubble').remove();
+              
+
+               svg.append('g')
+               .attr("class", "bubble")
+               .selectAll("circle")
+               .data(nested.sort(function(a, b) { 
+                  return b.values['delayed'] - a.values['delayed'];
+               }), key_func)
+               .enter()
+               .append("circle")
+               .attr('cx', function (d) {return d.values.x;})
+               .attr('cy', function (d) {return d.values.y;})
+               .attr('r', function(d) {
+                    return radius(d.values.delayed);
+               })
+               .attr('fill', 'Blue')
+               .attr('stroke', 'black')
+               .attr('opacity', 0.8)
+               .on("mouseover", function(d){
+                  
+                div.html( "Airport : " + d.key  +  " </br> " + "Total delayed flights : " + Math.round(d.values.delayed));
+                div.style("visibility", "visible");
+              })
+              .on("mousemove", function(){return div.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+              .on("mouseout", function(){return div.style("visibility", "hidden");});
+
+              x.domain(filtered.map(function(d) { return d.date; }));
+              y.domain([0, d3.max(filtered, function(d) { return d.delayed; }) * 1.1])
+              
+            
+
+
+                // Bars
+              var bar = chart.selectAll(".bar")
+                  .data(filtered)
+
+              
+
+              bar.enter().append("rect")
+                  .attr("class", "bar")
+                  .attr("x", function(d) { return x(d['date']); })
+                  .attr("y", height1)
+                  .attr("width", x.rangeBand())
+                  .attr("height", 0);
+
+
+              bar.transition()
+                  .duration(1500)
+                  .ease("elastic")
+                  .attr("y", function(d) { return y(d['delayed']); })
+                  .attr("height", function(d) { return height1 - y(d['delayed']); })   
+              bar.exit().remove();                        
+         
+          }
+
+
+
+        // buttons logic to select and update based on year selected
+
+        var years = [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016];
+
+        var buttons = d3.select("body")
+                        .append("div")
+                        .attr("class", "years_buttons")
+                        .selectAll("div")
+                        .data(years)
+                        .enter()
+                        .append("div")
+                        .text(function(d) {
+                            return d;
+                        });
+
+                buttons.on("click", function(d) {
+                    d3.select(".years_buttons")
+                      .selectAll("div")
+                      .transition()
+                      .duration(500)
+                      .style("color", "black")
+                      .style("background", "#6e92a3");
+                    d3.select(this)
+                      .transition()
+                      .duration(500)
+                      .style("background", "#b8ced8")
+                      .style("color", "white");
+                    update(d);
+                     });
+        }
+        var format = d3.time.format("%Y-%m-%d");
+        d3.tsv("data_v2.tsv", function(d) {
+          d.delayed = +d.delayed;
+          d.date = format.parse(d.date);
+          return d;
+        }, plot_points);
+      };
+      </script>
+  </head>
+<body>
+
+  <script type="text/javascript">
+
+// Load geojson    
+d3.json("us_new.json", draw);
+    
+   
+  </script>
+</body>
+</html>
