@@ -233,7 +233,11 @@
                 .orient("bottom")
                 .tickFormat(d3.time.format("%Y-%m"));
                 
-
+            chart.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height1 + ")")
+                .call(xAxis);
+                
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .orient("left")
