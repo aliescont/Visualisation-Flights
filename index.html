@@ -8,7 +8,7 @@
     <style>
 
     .bar {
-        fill: steelblue;
+        fill: #487284;
     }
 
     .axis {
@@ -63,15 +63,11 @@
     div.tooltip {   
         visibility: hidden;
         position: absolute;
-        width: 100px;
+        width: auto;
         height: auto;
         padding: 10px;
         background-color: white;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
         border-radius: 10px;
-        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         pointer-events: none;
 }    
@@ -82,7 +78,7 @@
         "use strict";
 
         // Map size 
-        var margin = { top: 10, right: 50, bottom: 50, left: 50 };
+        var margin = { top: 30, right: 40, bottom: 140, left: 50};
         var width = 800;
         var height = 650 - margin.top - margin.bottom;
 
@@ -97,13 +93,16 @@
 
         d3.select("body")
           .append("h4")
-          .text("The dataset contains information on United State flight delays from RITA for the last 10 years. This map shows the distribution of major airports in US and the ammount of minutes delayed in each airport on selected year");
-
-  
+          .html("The dataset contains information on United State flight delays from RITA for January 2006 to January 2016. This map shows the distribution of major airports in US. The ammount of minutes delayed in each airport on selected year is measured by circle" + "</br>" + "</br>" + "On the right you can see a bar chart showing the amount of min delayed on all major airports on each month of selected year");
         
+        // Enabling zoom in map SVG to identify better airports closer together
         var zoom = d3.behavior.zoom()
           .scaleExtent([1, 10])
           .on("zoom", zoomed);
+
+        function zoomed() {
+          svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        } 
 
         // SVG for map
         
@@ -123,33 +122,14 @@
               .attr("height", height1 + margin.top + margin.bottom)
             .append("g") 
               .attr('class', 'chart'); 
-
-        var chart = d3.select(".chart")
-              .attr("width", width1)
-              .attr("height", height1 + margin.top + margin.bottom)
-            .append("g")
-              .attr("transform", "translate(" + margin.left + "," + margin.bottom + ")");   
-
-        chart.append("text")      
-            .attr("x", width1 / 2 )
-              .attr("y",  height1  + margin.bottom)
-            .style("text-anchor", "center")
-            .text("Date");
-
-                       
-             
-        // Enabling zoom to identify better airports closer together
+           
+        // Track zoom events
         var rect = svg.append("rect")
             .attr("width", width)
             .attr("height", height)
             .style("fill", "none")
             .style("pointer-events", "all");
 
-
-        function zoomed() {
-          svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-        } 
-  
 
         // Draw map
         var projection = d3.geo.albersUsa()
@@ -207,9 +187,7 @@
                               })
                            .rollup(agg_airport)
                            .entries(data);
-                           debugger;
-                          
-           
+         
            // Calculate radius of each plot proportional to the number of flights delayed 
             var delayed_max = d3.max(nested, function(d) {
                 return d.values.delayed;
@@ -224,7 +202,24 @@
                 return d.key;
             }
 
+            //Bar chart
+
+            var chart = d3.select(".chart")
+                  .attr("width", width1)
+                  .attr("height", height1 + margin.top + margin.bottom)
+                .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.bottom + ")");   
+
+            // Barc chart Title
+            chart.append("text")
+                .attr("x", (width1 / 2))             
+                .attr("y", 0 - (margin.top / 2))
+                .attr("text-anchor", "middle")  
+                .style("font-size", "16px") 
+                .text("Delayed flights by month");
+
            // Scales
+           
             var x = d3.scale.ordinal()
                 .rangeRoundBands([0, width1], 0.1);
             
@@ -236,7 +231,8 @@
             var xAxis = d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
-                .tickFormat(d3.time.format("%Y-%m-%d"));
+                .tickFormat(d3.time.format("%Y-%m"));
+                
 
             var yAxis = d3.svg.axis()
                 .scale(y)
@@ -245,13 +241,14 @@
 
 
             chart.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height1 + ")")
-                .call(xAxis);
-
-            chart.append("g")
                 .attr("class", "y axis")
-                .call(yAxis);
+                .call(yAxis)
+                .append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", 6)
+                  .attr("dy", ".71em")
+                  .style("text-anchor", "end")
+                  .text("Delay (min)");
 
              
         function update(year) {
@@ -259,17 +256,16 @@
               var filtered = data.filter(function(d) {
                   return d.date.getFullYear() === year;
               });
-              
-
+             
               var nested = d3.nest()
                            .key(function(d) {
                             return d.airport;
                               })
                            .rollup(agg_airport)
                            .entries(filtered);
-                           
 
-                           
+              //Update points in map
+                          
                d3.select('.bubble').remove();
               
 
@@ -291,27 +287,24 @@
                .attr('opacity', 0.8)
                .on("mouseover", function(d){
                   
-                div.html( "Airport : " + d.key  +  " </br> " + "Total delayed flights : " + Math.round(d.values.delayed));
+                div.html( "Airport : " + d.key  +  " </br> " + "Total delayed on flights : " + Math.round(d.values.delayed));
                 div.style("visibility", "visible");
               })
               .on("mousemove", function(){return div.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
               .on("mouseout", function(){return div.style("visibility", "hidden");});
 
               x.domain(filtered.map(function(d) { return d.date; }));
-              y.domain([0, d3.max(filtered, function(d) { return d.delayed; }) * 1.1])
-              
-            
+              y.domain([0, d3.max(filtered, function(d) { return d.delayed; })]);
 
 
-                // Bars
+
+              // Update Bars in chart
               var bar = chart.selectAll(".bar")
                   .data(filtered)
 
-              
-
               bar.enter().append("rect")
                   .attr("class", "bar")
-                  .attr("x", function(d) { return x(d['date']); })
+                  .attr("x", function(d) { return x(d.date); })
                   .attr("y", height1)
                   .attr("width", x.rangeBand())
                   .attr("height", 0);
@@ -320,13 +313,11 @@
               bar.transition()
                   .duration(1500)
                   .ease("elastic")
-                  .attr("y", function(d) { return y(d['delayed']); })
-                  .attr("height", function(d) { return height1 - y(d['delayed']); })   
+                  .attr("y", function(d) { return y(d.delayed); })
+                  .attr("height", function(d) { return height1 - y(d.delayed); })   
               bar.exit().remove();                        
          
           }
-
-
 
         // buttons logic to select and update based on year selected
 
