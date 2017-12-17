@@ -23,6 +23,19 @@ What relationships do you notice?
 What do you think is the main takeaway from this visualization?
 Is there something you don’t understand in the graphic?
 
+References
+
+https://bl.ocks.org/mbostock/6123708
+
+https://stackoverflow.com/questions/34700903/d3-zoom-not-working-as-in-example
+
+http://bl.ocks.org/biovisualize/1016860
+
+http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
+
+http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5
+
+http://bl.ocks.org/d3noob/8952219
 
 
 
