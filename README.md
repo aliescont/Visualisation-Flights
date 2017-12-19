@@ -8,8 +8,14 @@ carrier_del	weather_del	nas_del	security_del	late_aircraft_del	on_time
 
 The first version of this visualisation includes a U.S map showing the distribution of major airports with bubble size proportional to the amount of delayed flights on each airport. One of the issues found on this version was that there are several airports located closer to each other. In order to solve this, I used zoom function to have a better look of these cases.
 
-Pending feedback review
+This version also includes a bar chart showing delay by months on selected year.
 
+Feedback review:
+
+Steps to be able to see this visualisation project
+- Add data_v2.tsv, us_new.json and index.html to your local file
+- Open terminal and start local server: python -m SimpleHTTPServer 8000
+- Select year buttons on index.html
 
 What do you notice in the visualization?
 What questions do you have about the data?
@@ -17,6 +23,19 @@ What relationships do you notice?
 What do you think is the main takeaway from this visualization?
 Is there something you don’t understand in the graphic?
 
+References
+
+https://bl.ocks.org/mbostock/6123708
+
+https://stackoverflow.com/questions/34700903/d3-zoom-not-working-as-in-example
+
+http://bl.ocks.org/biovisualize/1016860
+
+http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
+
+http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5
+
+http://bl.ocks.org/d3noob/8952219
 
 
 
