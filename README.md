@@ -19,7 +19,7 @@ I share first version to a friend and received following feedback
 - About the bar chart, I would make more explicit that represents the total of delayed flights by month, perhaps it would be enough adding the word "total" to the title. I would also add the name of the months on the x axis. 
 - On the map view, I think I would use the airport's name instead of the acronym for the tooltip. 
 
-Another review I got mentioned that explanatory text should be pointed closer to each graph because it's not clear that map shows sum of delayed flight each year and bar chart shows information on month basis.
+Another review I got mentioned that explanatory text describing each image (map and bar chart) should be pointed closer and no as main paragrah because it's not clear that map shows sum of delayed flight each year and bar chart shows information on monthly basis.
 
 
 ### References
