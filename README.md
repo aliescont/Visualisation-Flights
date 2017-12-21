@@ -21,6 +21,22 @@ I share first version to a friend and received following feedback
 
 Another review I got mentioned that explanatory text describing each image (map and bar chart) should be pointed closer and no as main paragrah because it's not clear that map shows sum of delayed flight each year and bar chart shows information on monthly basis.
 
+#### 3rd review
+What do you notice in the visualization? 
+That every time you clicked the years the data both from the graphic and the map changed, also on mouse over in the points of the map you can get more information by placing the mouse on top of the points in the map
+
+What questions do you have about the data? 
+I don't know if the Delay is an average of hours delayed or the total
+
+What relationships do you notice? 
+That from 2011 on september and october are low months untill 2014
+
+What do you think is the main takeaway from this visualization? 
+That you can establish a correlation between high seasons (summer vacations) and low seasons (near september after 9/11 attacks), and also the Atlanta and chicago airport have the more flights and the more delays ^_^
+
+Is there something you don’t understand in the graphic?
+Nope
+
 
 ### References
 
