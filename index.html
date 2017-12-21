@@ -26,7 +26,7 @@
     shape-rendering: crispEdges;
   }
 
-  
+
   circle {
     fill: #487284;
     stroke: black;
@@ -38,7 +38,7 @@
     color: black;
   }
   h4 {
-    
+
     color: gray;
     text-align: justify;
   }
@@ -47,7 +47,7 @@
     top: 150px;
     left: 850px;
     right: 50px;
-    
+
   }
   div.years_buttons div {
     display:inline-block;
@@ -113,7 +113,7 @@
         .attr("height", height_bar + margin.top + margin.bottom)
         .append("g") 
         .attr('class', 'chart'); 
-        
+
         // Track zoom events
         var rect = svg_map.append("rect")
         .attr("width", width_map)
@@ -137,7 +137,7 @@
         .style('fill', 'lightGray')
         .style('stroke', 'black')
         .style('stroke-width', 0.5);
-        
+
 
         // Variable for tooltip              
         var div = d3.select("body").append("div")   
@@ -153,7 +153,7 @@
               var total = d3.sum(leaves, function(d) {
                 return d.delayed;                
               });
-              
+
               var coords = leaves.map(function(d) {
                 return projection([+d.long, +d.lat]);
               });
@@ -163,13 +163,13 @@
               var center_y = d3.mean(coords, function(d) {
                 return d[1];
               });  
-              
+
               return {
-                
+
                 'delayed' : total,
                 'x' : center_x,
                 'y' : center_y
-                
+
               };
             }
 
@@ -179,18 +179,18 @@
             })
             .rollup(agg_airport)
             .entries(data);
-            
-            
+
+
            // Calculate radius of each plot proportional to the number of flights delayed 
            var delayed_max = d3.max(nested, function(d) {
             return d.values.delayed;
           });
 
-           
+
            var radius = d3.scale.sqrt()
            .domain([0, delayed_max])
            .range([0, 22]);
-           
+
            function key_func(d) {
             return d.key;
           }
@@ -215,9 +215,9 @@
 
            var x = d3.time.scale()
            .domain([new Date(2016,0, 1), new Date(2016,11, 31)])
-           
+
            .range([0, width_bar]);
-           
+
            var y = d3.scale.linear()
            .domain([0, d3.max(data, function(d) { return d.delayed; })])
            .range([height_bar , 0]);
@@ -227,13 +227,13 @@
             .scale(x)
             .orient("bottom")               
             .tickFormat(d3.time.format("%b"));
-            
+
             chart.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height_bar + ")")
             .call(xAxis);
-            
-            
+
+
             var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left")
@@ -251,13 +251,13 @@
             .text("Delay (min)");
 
 
-            
+
             function update(year) {
           // Logic to plot points based on button selected
           var filtered = data.filter(function(d) {
             return d.date.getFullYear() === year;
           });
-          
+
           var nested = d3.nest()
           .key(function(d) {
             return d.airport_name;
@@ -266,7 +266,7 @@
           .entries(filtered);
 
               //Update points in map
-              
+
               d3.select('.bubble').remove();
               
 
@@ -287,7 +287,7 @@
               .attr('stroke', 'black')
               .attr('opacity', 0.8)
               .on("mouseover", function(d){
-                
+
                 div.html( "Airport : " + d.key  +  " </br> " + "Total delayed on flights : " + Math.round(d.values.delayed));
                 div.style("visibility", "visible");
               })
@@ -313,8 +313,7 @@
 
 
               bar.transition()
-              .duration(1500)
-              .ease("elastic")
+              .duration(500)
               .attr("y", function(d) { return y(d.delayed); })
               .attr("height", function(d) { return height_bar - y(d.delayed); })   
               bar.exit().remove();  
@@ -325,10 +324,10 @@
               .tickFormat(d3.time.format("%b"));
               chart.selectAll(".x.axis")
               .call(xAxis);   
-              
 
 
-              
+
+
             }
 
         // buttons logic to select and update based on year selected

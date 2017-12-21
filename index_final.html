@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Visualization Project</title>        
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src='vis.js'></script>        
+    </head>
+    <body>
+        <h1>Flights Delayed 2006-2016</h1>
+        <p>The dataset contains information on United States flight information from RITA for January 2006 to January 2016. This visualisation focus on flight delayed for major airports in US. There is no special focus on the cause but on sum of total delayed flights</p> 
+        <p>You can select years button to see the total sum of flight delayed on each airport and the distribution of flight that were delayed each month, in order to see the impact on high seasons.</p>
+        <div id="year"></div>             
+        <div id="map"><p>This map shows distribution of airports and their sum of total delayed flights on each aiport for selected year. Also, you can see sum of min delayed by each cause, which are because of weather, NAS(National Aviation System), Security, Carrier and Late aircraft delay</p></div>
+        <div id="chart"><p>This bar chart shows the sum of delayed flights on all major airports by each month of selected year</p></div>
+    </body>
+</html>
