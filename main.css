@@ -1,0 +1,93 @@
+.bar {
+    fill: #487284;
+}
+.axis {
+    font: 10px sans-serif;
+}
+.axis text {
+    font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+circle {
+    cursor: pointer;
+    fill: #487284;
+    stroke: black;
+    stroke-width: 0.7;
+    opacity: 0.7;
+}
+h1 {
+    font: 30px sans-serif;
+    text-align: center;
+    color: black;
+}
+p {
+    font-family: sans-serif;
+    color: gray;
+    width: 98%;
+    font: 15px sans-serif;
+    text-align: justify;
+}
+#map{
+    font-family: sans-serif;
+    float:left;
+    color: gray;
+    height: 650px;
+    width: 60%;
+    margin: 1%; 
+}
+#chart{
+    font-family: sans-serif;
+    float:left;
+    height: 650px;
+    width: 35%;
+    right: 50px;
+    margin: 1%; 
+}
+#year{
+    font-family: sans-serif;
+    cursor: pointer;
+    float:left;
+    top: 100px;
+    left: 85px;
+    right: 50px;
+    margin: 1%; 
+}
+body { 
+    font-family: sans-serif;
+   
+}
+.block { 
+    margin: 1%; 
+    float: left 
+}
+.block_100 { 
+    width: 98%; 
+}
+.block_50 { 
+    width: 48%; 
+}
+
+div.years_buttons div {
+    cursor: pointer; 
+    display: inline-block;
+    background-color: #6e92a3;
+    padding: 3px;
+    margin: 5px;
+    position: relative;
+}
+div.tooltip {
+    visibility: hidden;
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
