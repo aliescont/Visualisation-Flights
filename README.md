@@ -39,6 +39,8 @@ Nope
 
 After feedback review I've done few changes on stylesheet and changing text labels and axis and moving text explaining data closer to map and bar chart also changing title and adding mouse pointer and cause of delayed to a tooltip on map to gives you more information to the user to interact with this visualisation.
 
+The last version are shown on index_final.html, vis.js and main.css
+
 ### References
 
 https://bl.ocks.org/mbostock/6123708
