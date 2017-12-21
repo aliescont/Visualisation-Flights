@@ -1,7 +1,7 @@
 # Visualisation-Flights
 
 ### Summary
-This visualisation shows the localisation of major airports in USA and flights delayed by airport each year from 2006 to 2016. Also, shows the variation of flight delayed through all months in a year. 
+This visualisation gives you an option to select a year and shows sum of delayed flight by airport for all major airports in US for 2006 to 2016 in an US map and shows you the variation of flight delayed through all months in a year. 
 
 ### Design
 The dataset contains information on United States flight delays from RITA for the last 10 years, selecting major airports of US. The main object of this visualisation is to analyse which airports have more flight with delay in the last 10 years and if there is an important reduction or increase of number of flight delayed in the last 10 years. 
@@ -10,7 +10,9 @@ The first step was cleaning data got from RITA and select variables of location 
 State, Airport, Long, Lat, Dat. And variables showing arrivals, delayed, cancelled,	diverted and the reason for delayed
 carrier_del	weather_del	nas_del	security_dellate_aircraft_del	on_time
 
-I noticed on EDA done using R that there were a decrease on flight delayed on from 2006 to 2009 and then it remains more or less the same. Also, I noticed that there was a seasonality on flight delayed. The first version of this visualisation includes a U.S map showing the distribution of major airports with bubble size proportional to the amount of delayed flights on each airport and a bar chart showing the distribution of dealayed each month of selected year. 
+I noticed on EDA done using R that there were a decrease on flight delayed on from 2006 to 2009 and then it remains with a similar patron. Also, I noticed that there was a seasonality on flight delayed; there is more frequency of delayed flight on high seasons and want to show also what are the airports which with more frequency have more delay flights.
+
+The first version of this visualisation includes a U.S map showing the distribution of major airports with bubble size proportional to the amount of delayed flights on each airport and a bar chart showing the distribution of delayed flights each month of selected year. 
 
 One of the issues found on this first version was that there are several airports located closer to each other and some bubbles were overlapping. In order to solve this, I used zoom function to have a better look of these cases and sort values of nested data to prevent that bigger bubbles were above smaller ones. 
 
@@ -34,6 +36,8 @@ That from 2011 on september and october are low months untill 2014
 That you can establish a correlation between high seasons (summer vacations) and low seasons (near september after 9/11 attacks), and also the Atlanta and chicago airport have the more flights and the more delays.
 - Is there something you don’t understand in the graphic?
 Nope
+
+After feedback review I've done few changes on stylesheet and changing text labels and axis and moving text explaining data closer to map and bar chart also changing title and adding mouse pointer and cause of delayed to a tooltip on map to gives you more information to the user to interact with this visualisation.
 
 ### References
 
