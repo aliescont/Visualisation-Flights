@@ -4,15 +4,21 @@
 This visualisation gives you an option to select a year and shows sum of delayed flight by airport for all major airports in US for 2006 to 2016 in an US map and shows you the variation of flight delayed through all months in a year. 
 
 ### Design
-The dataset contains information on United States flight delays from RITA for the last 10 years, selecting major airports of US. The main object of this visualisation is to analyse which airports have more flight with delay in the last 10 years and if there is an important reduction or increase of number of flight delayed in the last 10 years. 
+The dataset contains information on United States flight delays from Bureau of Transportation Statistics (https://www.transtats.bts.gov/OT_Delay/OT_DelayCause1.asp), selecting all carriers, major airports and a period from January 2006 to January 2016. The main object of this visualisation is to analyse delayed flights on each airport to identify which airports have more delay flights each year and evaluate if there is an increase or decrease on number of delayed flights by airport.
 
-The first step was cleaning data got from RITA and select variables of location and date, such as
+The first step was cleaning data got from RITA selecting variables of location and date, such as
 State, Airport, Long, Lat, Dat. And variables showing arrivals, delayed, cancelled,	diverted and the reason for delayed
-carrier_del	weather_del	nas_del	security_dellate_aircraft_del	on_time
+by carrier,	weather, NAS (National Aviation System), security or aircraft delay. And create a new variable to identify the percentage of flight on time. 
 
-I noticed on EDA done using R that there were a decrease on flight delayed on from 2006 to 2009 and then it remains with a similar patron. Also, I noticed that there was a seasonality on flight delayed; there is more frequency of delayed flight on high seasons and want to show also what are the airports which with more frequency have more delay flights.
+After this first exploratory analysis I realise that there were 2 major airports whit highest sum of delay flight for this period, which are William B Hartsfield-Atlanta International and Chicago O'Hare International. I also noticed that in period 2006 to 2011 there was a higher flights delayed than after this period. Taking into account the events of 9/11 I could tell from this data, that one possible reason of this decrease was probably due to measures taken after this event that improve efficiency over flight performance. After 2011
 
-The first version of this visualisation includes a U.S map showing the distribution of major airports with bubble size proportional to the amount of delayed flights on each airport and a bar chart showing the distribution of delayed flights each month of selected year. 
+Also, I noticed that during high season the sum of flights delayed increase, which is something that I was expecting before EDA.
+
+The first version of this visualisation includes a U.S map showing the distribution of major airports (selected according to filter option in RITA web page) ploting a circle with a radius proportional to the sum of delayed flights on selected year in each airport. I've chosen a map because I though is a good visualisation tool that could help to identify airports with higher delayed and if there is similar trends on all major airports or there are few of them with highest delayed in this period. 
+
+Also this visualisation shows a bar chart with months in x axis and sum of delayed flights in y axis, in order to evaluate the distribution of delayed flight over year selected. I choose a bar chart because I though it would show the difference between months and show trends and would improve interaction with user would change from one year to another.
+
+I use light gray and blue because there are sober colors that could send a message of reliability and strenght on this visualisation. I use some text in gray to show consistency with map and bar chart.
 
 One of the issues found on this first version was that there are several airports located closer to each other and some bubbles were overlapping. In order to solve this, I used zoom function to have a better look of these cases and sort values of nested data to prevent that bigger bubbles were above smaller ones. 
 
