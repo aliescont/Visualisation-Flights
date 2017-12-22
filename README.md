@@ -10,7 +10,7 @@ The first step was cleaning data got from RITA selecting variables of location a
 State, Airport, Long, Lat, Dat. And variables showing arrivals, delayed, cancelled,	diverted and the reason for delayed
 by carrier,	weather, NAS (National Aviation System), security or aircraft delay. And create a new variable to identify the percentage of flight on time. 
 
-After this first exploratory analysis I realise that there were 2 major airports whit highest sum of delay flight for this period, which are William B Hartsfield-Atlanta International and Chicago O'Hare International. I also noticed that in period 2006 to 2011 there was a higher flights delayed than after this period. Taking into account the events of 9/11 I could tell from this data, that one possible reason of this decrease was probably due to measures taken after this event that improve efficiency over flight performance. After 2011
+After this first exploratory analysis I realise that there were 2 major airports whit highest sum of delay flight for this period, which are William B Hartsfield-Atlanta International and Chicago O'Hare International. I also noticed that in period 2006 to 2011 there was a higher flights delayed than after this period. 
 
 Also, I noticed that during high season the sum of flights delayed increase, which is something that I was expecting before EDA.
 
