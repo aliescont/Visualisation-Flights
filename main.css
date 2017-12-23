@@ -31,6 +31,7 @@ p {
     width: 98%;
     font: 15px sans-serif;
     text-align: justify;
+    margin: 1%; 
 }
 #map{
     font-family: sans-serif;
@@ -58,6 +59,8 @@ p {
     margin: 1%; 
 }
 body { 
+    margin: 1%; 
+    width: 98%;
     font-family: sans-serif;
    
 }
@@ -90,4 +93,17 @@ div.tooltip {
     border-radius: 10px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
     pointer-events: none;
+}
+.legend circle {
+
+    fill: #487284;
+    stroke: black;
+    stroke-width: 0.8;
+    opacity: 0.4;
+}
+
+.legend text {
+  fill: black;
+  font: 10px sans-serif;
+  text-anchor: middle;
 }
