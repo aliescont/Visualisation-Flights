@@ -178,7 +178,7 @@ function draw(geo_data) {
           .style("text-anchor", "start")
           .style("font-size", "10px") 
           .style("fill", "#535456")
-          .text("Sum Delay (min)");
+          .text("Total delay (min)");
 
             function update(year) {
           // Logic to plot points based on button selected
@@ -254,6 +254,22 @@ function draw(geo_data) {
               .call(xAxis);   
 
             }
+
+        var legend = svg_map.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + (width_map - 150) +", " + (50) + ")")
+          .selectAll("g")
+            .data([10000, 50000, 100000])
+          .enter().append("g");
+
+        legend.append("circle")
+            .attr("cy", function (d) { return -1*radius(d); })
+            .attr ("r", radius);
+        legend.append("text")
+            .attr("y", function(d) {return -2*radius(d); })
+            .attr("dy", "0.1em")
+            .text(d3.format(".1s"));
+
 
         // buttons logic to select and update based on year selected
         var years = [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016];
