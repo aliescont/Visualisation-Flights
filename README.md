@@ -12,15 +12,23 @@ by carrier,	weather, NAS (National Aviation System), security or aircraft delay.
 
 After this first exploratory analysis I realise that there were 2 major airports whit highest sum of delay flight for this period, which are William B Hartsfield-Atlanta International and Chicago O'Hare International. I also noticed that in period 2006 to 2011 there was a higher flights delayed than after this period. 
 
+I found interesting to analyse performance of airports on the same state regarding delay flights. I've compared 4 states that shows different trends:
+State of IL has 2 airports where Chicago O'Hare International always have more flights delayed than Chicago Midway International
+State of VA has 2 airports Ronald Reagan Washington National and Washington Dulles International. Exploratory analysis shows that in period from 2006 to 2014 both airports have similar trends of flight delayed. However in the last 2 years (2015 and 2016) Washington Dulles International decrease al most by half in 2015 and continues decreasing in 2016.
+State of NY has 2 airports John F. Kennedy International and LaGuardia which show similar trends. However, in the last 2 years JFK seems to have better performance than La Guardia airport.
+State of FL has 4 airports Fort Lauderdale-Hollywood International, Miami International, Orlando International and Tampa International, with similar trends in this period. However, Miami International airport has highest delayed flights than others.
+State of CA has 3 airports Los Angeles International, San Francisco International and San Diego International, with similar trends; Los Angeles and San Francisco maintain a similar trend and San Diego airport has less delayed flights than others in this state.
+State of TX has 3 airports, 2 of them are closer to each other and shows different trends Dallas Love Field has airport with less delayed on the state, while Dallas/Fort Worth International is the airport with highest delayed of Texas. The other airport is in the middle and maintains their performance over this period
+
 Also, I noticed that during high season the sum of flights delayed increase, which is something that I was expecting before EDA.
 
-The first version of this visualisation includes a U.S map showing the distribution of major airports (selected according to filter option in RITA web page) ploting a circle with a radius proportional to the sum of delayed flights on selected year in each airport. I've chosen a map because I though is a good visualisation tool that could help to identify airports with higher delayed and if there is similar trends on all major airports or there are few of them with highest delayed in this period. 
+The first version of this visualisation includes a U.S map showing the distribution of major airports (selected according to filter option in RITA web page) ploting a circle with a radius proportional to the sum of delayed flights on selected year in each airport. I've chosen a map because I though is a good visualisation tool that could help to identify airports with higher delayed flights. Also, doing EDA I found interesting to show different trends on airports in the same state, as mentioned before.
 
-Also this visualisation shows a bar chart with months in x axis and sum of delayed flights in y axis, in order to evaluate the distribution of delayed flight over year selected. I choose a bar chart because I though it would show the difference between months and show trends and would improve interaction with user would change from one year to another.
+One of the issues found on map visualisation was that there are several airports located closer to each other and some bubbles were overlapping. In order to solve this, I used zoom function to have a better look of these cases and sort values of nested data to prevent that bigger bubbles were above smaller ones. Please notice airports located in NY/NJ and MD/VA
+
+Also this visualisation shows a bar chart with months in x axis and sum of delayed flights in y axis, in order to evaluate the distribution of delayed flight over year selected. I choose a bar chart because I though it would show the difference between months and show trends and would improve interaction when user would change from one year to another.
 
 I use light gray and blue because there are sober colors that could send a message of reliability and strenght on this visualisation. I use some text in gray to show consistency with map and bar chart.
-
-One of the issues found on this first version was that there are several airports located closer to each other and some bubbles were overlapping. In order to solve this, I used zoom function to have a better look of these cases and sort values of nested data to prevent that bigger bubbles were above smaller ones. 
 
 ### Feedback
 
