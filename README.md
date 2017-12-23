@@ -12,13 +12,16 @@ by carrier,	weather, NAS (National Aviation System), security or aircraft delay.
 
 After this first exploratory analysis I realise that there were 2 major airports whit highest sum of delay flight for this period, which are William B Hartsfield-Atlanta International and Chicago O'Hare International. I also noticed that in period 2006 to 2011 there was a higher flights delayed than after this period. 
 
-I found interesting to analyse performance of airports on the same state regarding delay flights. I've compared 4 states that shows different trends:
-State of IL has 2 airports where Chicago O'Hare International always have more flights delayed than Chicago Midway International
-State of VA has 2 airports Ronald Reagan Washington National and Washington Dulles International. Exploratory analysis shows that in period from 2006 to 2014 both airports have similar trends of flight delayed. However in the last 2 years (2015 and 2016) Washington Dulles International decrease al most by half in 2015 and continues decreasing in 2016.
-State of NY has 2 airports John F. Kennedy International and LaGuardia which show similar trends. However, in the last 2 years JFK seems to have better performance than La Guardia airport.
-State of FL has 4 airports Fort Lauderdale-Hollywood International, Miami International, Orlando International and Tampa International, with similar trends in this period. However, Miami International airport has highest delayed flights than others.
-State of CA has 3 airports Los Angeles International, San Francisco International and San Diego International, with similar trends; Los Angeles and San Francisco maintain a similar trend and San Diego airport has less delayed flights than others in this state.
-State of TX has 3 airports, 2 of them are closer to each other and shows different trends Dallas Love Field has airport with less delayed on the state, while Dallas/Fort Worth International is the airport with highest delayed of Texas. The other airport is in the middle and maintains their performance over this period
+I found interesting to analyse performance of airports on the same state regarding delay flights. I've found different trends:
+States with similar trends:
+  - State of Illinous has 2 airports; Chicago O'Hare International always have more flights delayed than Chicago Midway International
+  - State of California has 3 airports Los Angeles International, San Francisco International and San Diego International, with similar trends; Los Angeles and San Francisco maintain a similar trend and San Diego airport has less delayed flights than others in this state.
+  - State of Texas has 3 airports, 2 of them are closer to each other and shows different trends Dallas Love Field has airport with less delayed on the state, while Dallas/Fort Worth International is the airport with highest delayed of Texas. The other airport is in the middle and maintains their performance over this period
+  - State of Florida has 4 airports Fort Lauderdale-Hollywood International, Miami International, Orlando International and Tampa International, with similar trends in this period. However, Miami International airport has highest delayed flights than others.
+
+States with different trends in this period:
+  - State of Virginia has 2 airports Ronald Reagan Washington National and Washington Dulles International. Exploratory analysis shows that in period from 2006 to 2014 both airports have similar trends of flight delayed. However in the last 2 years (2015 and 2016) Washington Dulles International decrease al most by half in 2015 and continues decreasing in 2016.
+  - State of New York has 2 airports John F. Kennedy International and LaGuardia which show similar trends. However, in the last 2 years JFK seems to have better performance than La Guardia airport.
 
 Also, I noticed that during high season the sum of flights delayed increase, which is something that I was expecting before EDA.
 
